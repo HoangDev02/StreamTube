@@ -46,7 +46,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> {
-					auth.requestMatchers("/welcome", "/login/sign-up", "/login", "/login/refreshToken").permitAll()
+					auth.requestMatchers("/", "/sign-up", "/login", "/refreshToken").permitAll()
 							.requestMatchers(matcher -> matcher.getRequestURI().contains("payment-callback"))
 							.permitAll().requestMatchers("/api/**", "/api/manage/**").authenticated();
 				}).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

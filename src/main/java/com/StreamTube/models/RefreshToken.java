@@ -23,11 +23,11 @@ public class RefreshToken {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-	private String token;
-
+	 private String token;
 	private Instant expiryDate;
-
+	private String accessToken;
+	
+	private String refreshToken;
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User user;

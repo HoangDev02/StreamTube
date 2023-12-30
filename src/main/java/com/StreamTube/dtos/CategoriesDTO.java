@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RefreshTokenRequest {
-
-	private String refreshToken;
+public class CategoriesDTO {
+	private Integer id;
+	private String name;
 }
