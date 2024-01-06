@@ -70,8 +70,8 @@ public class Video {
 	@JsonManagedReference
 	@OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
 	private List<VideoView> views;
-
-	@JsonManagedReference
+	
+	@JsonManagedReference	
 	@OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
 	private List<VideoRating> ratings;
 

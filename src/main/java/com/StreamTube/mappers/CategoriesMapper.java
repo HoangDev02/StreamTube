@@ -19,7 +19,6 @@ public class CategoriesMapper {
 	public List<CategoriesDTO> toDTOList(List<Categories> models) {
 		return models.stream().map(cat -> toDTO(cat)).collect(Collectors.toList());
 	}
-	
 	public Categories toMoDel(CategoriesDTO dto) {
 		Categories model = new Categories();
 		model.setId(dto.getId());

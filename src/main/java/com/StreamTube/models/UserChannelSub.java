@@ -31,12 +31,12 @@ public class UserChannelSub {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
-
+	
 	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "channel_id")
 	private Channel channel;
-
+	
 	@Column(name = "subscribe_date")
 	@CreationTimestamp
 	private Date subscribeDate;

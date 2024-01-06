@@ -22,12 +22,12 @@ public class Categories {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "category_id")
 	private Integer id;
-
+	
 	@Column(name = "name")
 	private String name;
-
+	
 	@JsonManagedReference
 	@OneToMany(mappedBy = "categories")
 	private List<VideoCategories> videoCategories;
-
+		
 }
