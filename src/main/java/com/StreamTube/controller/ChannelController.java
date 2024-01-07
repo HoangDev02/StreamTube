@@ -22,44 +22,71 @@ import com.StreamTube.models.Channel;
 import com.StreamTube.models.User;
 import com.StreamTube.services.ChannelService;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+
 @RestController
-@RequestMapping("/api/channel")
+@RequestMapping("/api/channels")
 public class ChannelController {
 	@Autowired
 	private ChannelService channelService;
-	
+
 	@Autowired
 	private ChannelMapper channelMapper;
-	
+
 	@GetMapping
 	public List<ChannelDTO> getAllChannel() {
 		return channelMapper.toDTOList(channelService.getAllChannel());
 	}
+
 	private User getCurrentUser() {
-	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    CustomUserDetails currentUserDetails = (CustomUserDetails) authentication.getPrincipal();
-	    return currentUserDetails.getUser();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails currentUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		return currentUserDetails.getUser();
 	}
+
 	@PostMapping("/create")
 	public ResponseEntity<String> createChannel(@RequestBody ChannelDTO channelDTO) {
-	    if (channelDTO == null) {
-	        return ResponseEntity.badRequest().body("Channel data is missing");
-	    }
-	    try {
-	        User currentUser = getCurrentUser();
-	        Channel channel = channelMapper.toModel(channelDTO);
-	        channel.setCreator(currentUser);
-	        channelService.createChannel(channel);
-	        return ResponseEntity.ok("Create channel Success");
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating channel");
-	    }
+		if (channelDTO == null) {
+			return ResponseEntity.badRequest().body("Channel data is missing");
+		}
+		try {
+			User currentUser = getCurrentUser();
+			Channel channel = channelMapper.toModel(channelDTO);
+			channel.setCreator(currentUser);
+			channelService.createChannel(channel);
+			return ResponseEntity.ok("Create channel Success");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating channel");
+		}
 	}
+
+	@GetMapping("/user/{userId}")
+	public List<ChannelDTO> getAllChannelsByUserId(@PathVariable("userId") Integer userId) {
+		User currentUser = getCurrentUser();
+		Integer currentUserId = currentUser.getId();
+		List<ChannelDTO> channelDTOs = channelMapper.toDTOList(channelService.findByCreatorId(userId));
+		for (ChannelDTO channelDTO : channelDTOs) {
+			channelDTO.setOwner(userId.equals(currentUserId));
+		}
+		return channelDTOs;
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<ChannelDTO> getChannelbyId(@PathVariable("id") Integer id) {
+		User currentUser = getCurrentUser();
+		Integer userId = currentUser.getId();
+		boolean isOwner = channelService.checkOwnership(id, userId);
+		ChannelDTO channelDTO = channelMapper.toDTO(channelService.getChannelById(id));
+		channelDTO.setOwner(isOwner);
+		return ResponseEntity.ok(channelDTO);
+	}
+
 	@PutMapping("/update/{id}")
-	public ResponseEntity<ChannelDTO> updatecategory(@PathVariable("id") Integer id, @RequestBody ChannelDTO channelDTO){
+	public ResponseEntity<ChannelDTO> updatecategory(@PathVariable("id") Integer id,
+			@RequestBody ChannelDTO channelDTO) {
 //		User currentUser = getCurrentUser();
-	    Channel updateChannel = channelService.updateChannel(id, channelMapper.toModel(channelDTO));
-	    ChannelDTO updateDTO = channelMapper.toDTO(updateChannel);
-	    return ResponseEntity.ok(updateDTO);
+		Channel updateChannel = channelService.updateChannel(id, channelMapper.toModel(channelDTO));
+		ChannelDTO updateDTO = channelMapper.toDTO(updateChannel);
+		return ResponseEntity.ok(updateDTO);
 	}
 }

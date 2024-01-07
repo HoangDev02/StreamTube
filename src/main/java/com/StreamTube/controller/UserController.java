@@ -16,7 +16,7 @@ import com.StreamTube.models.User;
 import com.StreamTube.services.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 	@Autowired
 	private UserService userService;
@@ -25,11 +25,11 @@ public class UserController {
 	private UserMapper userMapper;
 
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDTO> getUserById(@PathVariable Integer id) {
+	public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Integer id) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails currentUserDetails = (CustomUserDetails) authentication.getPrincipal();
 		User currentUser = currentUserDetails.getUser();
-		
+
 		System.out.println(id);
 
 		System.out.println(currentUser.getId());
@@ -45,5 +45,4 @@ public class UserController {
 			return ResponseEntity.ok(userDTO);
 		}
 	}
-
 }

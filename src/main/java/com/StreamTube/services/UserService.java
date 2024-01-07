@@ -20,7 +20,7 @@ public interface UserService {
 	User getSafeUserDetails(User targetUser);
 
 	boolean isOwner(Integer userId, Integer targetUserId);
-
+	
 	int getIdUserByUsername(String username);
 //		public void buyVip(User user);
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import com.google.cloud.storage.Bucket;
 
 @Service
 public class VideoServiceImp implements VideoService {
-	
+
 	@Autowired
 	private VideoRepository videoRepository;
 	@Autowired
@@ -31,6 +32,7 @@ public class VideoServiceImp implements VideoService {
 	private Bucket storageClient;
 	@Autowired
 	private ChannelService channelService;
+
 	@Override
 	public List<Video> getAllVideos() {
 		return videoRepository.findAll();
@@ -38,8 +40,7 @@ public class VideoServiceImp implements VideoService {
 
 	@Override
 	public Video updateVideo(Integer id, Video video) {
-		return videoRepository.findById(id)
-			.map(e -> {
+		return videoRepository.findById(id).map(e -> {
 			e.setTitle(video.getTitle());
 			e.setDescription(video.getDescription());
 			e.setTags(video.getTags());
@@ -51,12 +52,13 @@ public class VideoServiceImp implements VideoService {
 	public void deleteVideo(Integer id) {
 		videoRepository.deleteById(id);
 	}
+
 	public Video createVideo(Video video) {
 		return videoRepository.save(video);
 	}
 
 	@Override
-	public Video uploadVideo(MultipartFile file,VideoDTO metadata) {
+	public Video uploadVideo(MultipartFile file, VideoDTO metadata) {
 		String videoName = UUID.randomUUID().toString();
 		Blob blob;
 		try {
@@ -80,6 +82,7 @@ public class VideoServiceImp implements VideoService {
 			return null;
 		}
 	}
+
 	public static long getVideoDuration(String videoUrl) throws Exception {
 		FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(videoUrl);
 		grabber.start();
@@ -89,13 +92,25 @@ public class VideoServiceImp implements VideoService {
 	}
 
 	@Override
-	public Video getVideoById(int videoId) {
-		// TODO Auto-generated method stub
-		return videoRepository.findById(videoId).orElse(null);
+	public Video getVideoById(Integer id) {
+		return videoRepository.findById(id).orElse(null);
 	}
 
+	@Override
+	public Stream<Video> getVideosByChannelAsStream(Integer channelId) {
+		List<Video> videos = videoRepository.findAllByChannelId(channelId);
+		Stream<Video> videosStream = videos.stream();
+		return videosStream;
+	}
 
-	
-	
+	@Override
+	public boolean isOwner(Integer id, Integer currentUserId) {
+		Video existingVideo = getVideoById(id);
+		if (existingVideo != null) {
+			Channel channel = existingVideo.getChannel();
+			return channel != null && channel.getCreator().getId().equals(currentUserId);
+		}
+		return false;
+	}
 
 }

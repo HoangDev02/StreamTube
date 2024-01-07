@@ -47,4 +47,10 @@ public class ChannelServiceImp implements ChannelService{
 	    Channel channel = getChannelById(channelId);
 	    return channel != null && channel.getCreator().getId().equals(userId);
 	}
+
+	@Override
+	public List<Channel> findByCreatorId(Integer id) {
+		// TODO Auto-generated method stub
+		return  channelRepository.findByCreatorId(id);
+	}
 }

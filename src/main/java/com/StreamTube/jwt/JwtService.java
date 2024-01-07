@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class JwtService {
 	        .setSubject(userName)
 	        .setIssuedAt(new Date(System.currentTimeMillis()))
 //	        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 30)) // 30 seconds
-	        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60*60 ))
+	        .setExpiration(new Date(System.currentTimeMillis() + Duration.ofDays(10).toMillis() ))
 	        .signWith(getSignKey(), SignatureAlgorithm.HS256)
 	        .compact();
 	}

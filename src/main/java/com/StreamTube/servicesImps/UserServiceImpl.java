@@ -83,25 +83,30 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getFullUserDetails(User targetUser) {
 		// TODO Auto-generated method stub
-		return null;
+		return targetUser;
 	}
 
 	@Override
 	public User getSafeUserDetails(User targetUser) {
-		// TODO Auto-generated method stub
-		return null;
+		User temp = new User();
+		temp.setId(targetUser.getId());
+		temp.setUsername(targetUser.getUsername());
+		return temp;
 	}
 
 	@Override
 	public boolean isOwner(Integer userId, Integer targetUserId) {
-		// TODO Auto-generated method stub
-		return false;
+		if (userId.equals(targetUserId)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public int getIdUserByUsername(String username) {
 		// TODO Auto-generated method stub
-		return 0;
+		return userRepository.findByUsername(username).get().getId();
 	}
 
 }
