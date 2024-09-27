@@ -60,7 +60,7 @@ public class CommentController {
 	    commentDTO.setUserId(user.getId());
 		return commentMapper.toDTO(commentService.createComment(commentMapper.toModel(commentDTO)));
 	}
-
+	
 	@PutMapping("/{id}")
 	public ResponseEntity<CommentDTO> updateComment(@PathVariable("id") Integer id, @RequestBody CommentDTO commentDTO) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

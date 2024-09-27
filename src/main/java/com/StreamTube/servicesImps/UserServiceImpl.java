@@ -70,14 +70,26 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User updateUser(Integer id, User user) {
-		// TODO Auto-generated method stub
-		return null;
+		User existingUser = userRepository.findById(id).orElse(null);
+		if(existingUser != null) {
+			if (user.getUsername() != null) {
+				existingUser.setUsername(user.getUsername());
+			}
+			if (user.getEmail() != null) {
+				existingUser.setEmail(user.getEmail());
+			}
+			if (user.getPassword() != null) {
+				existingUser.setPassword(user.getPassword());
+			}
+		}
+		
+		return userRepository.save(existingUser);
 	}
 
 	@Override
 	public void deleteUser(Integer id) {
 		// TODO Auto-generated method stub
-
+		userRepository.deleteById(id);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import com.StreamTube.models.User;
 @Component
 public class UserMapper {
 
-	public UserDTO toDTO(User model) {
+	public static UserDTO toDTO(User model) {
 		UserDTO dto = new UserDTO();
 		dto.setId(model.getId());
 		dto.setUsername(model.getUsername());
@@ -34,7 +34,7 @@ public class UserMapper {
 		return dto;
 	}
 
-	public List<UserDTO> toDTOList(List<User> models) {
+	public static List<UserDTO> toDTOList(List<User> models) {
 		return models.stream().map(cat -> toDTO(cat)).collect(Collectors.toList());
 	}
 

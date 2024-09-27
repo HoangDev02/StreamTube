@@ -29,7 +29,7 @@ public class UserController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails currentUserDetails = (CustomUserDetails) authentication.getPrincipal();
 		User currentUser = currentUserDetails.getUser();
-
+		
 		System.out.println(id);
 
 		System.out.println(currentUser.getId());

@@ -32,7 +32,7 @@ import com.StreamTube.filters.JwtAuthFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 	@Autowired
 	private JwtAuthFilter authFilter;
